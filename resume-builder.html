@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder - CV2Desk</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .builder-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 90px;
+            padding: 2rem;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: 100vh;
+        }
+
+        .builder-form {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .form-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+            background: var(--bg-secondary);
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .remove-btn {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--error);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .remove-btn:hover {
+            background: var(--error);
+            color: white;
+        }
+
+        .entry-item {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+            position: relative;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .entry-header h4 {
+            margin: 0;
+            color: var(--text-light);
+        }
+
+        .template-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .template-option {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .template-option input[type="radio"] {
+            display: none;
+        }
+
+        .template-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            transition: var(--transition);
+            background: var(--bg-secondary);
+        }
+
+        .template-option input[type="radio"]:checked + .template-label {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .template-label:hover {
+            border-color: var(--primary);
+        }
+
+        .template-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .template-name {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .preview-panel {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 90px;
+            max-height: calc(100vh - 110px);
+            overflow-y: auto;
+        }
+
+        .preview-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            color: #000;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .preview-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .preview-contact {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .preview-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #000;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .preview-entry {
+            margin-bottom: 1rem;
+        }
+
+        .preview-entry-title {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .preview-entry-subtitle {
+            font-size: 0.95rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .preview-entry-description {
+            font-size: 0.9rem;
+            color: #333;
+            margin-top: 0.3rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-light);
+            padding: 1rem 0;
+            border-top: 2px solid var(--border);
+        }
+
+        .form-actions button {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .export-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .export-menu {
+            display: none;
+            position: absolute;
+            background: var(--bg-light);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            min-width: 150px;
+            bottom: 100%;
+            right: 0;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+        }
+
+        .export-dropdown:hover .export-menu {
+            display: block;
+        }
+
+        .export-menu li {
+            padding: 0;
+        }
+
+        .export-menu a {
+            display: block;
+            padding: 0.8rem 1rem;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .export-menu a:hover {
+            background: var(--bg-secondary);
+            color: var(--primary);
+        }
+
+        @media (max-width: 1200px) {
+            .builder-container {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-panel {
+                position: static;
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .builder-container {
+                padding: 1rem;
+            }
+
+            .builder-form,
+            .preview-panel {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-rocket"></i>
+                <span>CV2Desk</span>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="nav-btn login-btn" onclick="window.location.href='index.html'">Back</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="builder-container">
+        <!-- Form Section -->
+        <div class="builder-form">
+            <h2 style="margin-bottom: 2rem; color: var(--primary);">
+                <i class="fas fa-file-alt"></i> Professional Resume Builder
+            </h2>
+
+            <form id="resumeForm">
+                <!-- Template Selection -->
+                <div class="form-section">
+                    <h3><i class="fas fa-palette"></i> Select Professional Template</h3>
+                    <div class="template-selector">
+                        <div class="template-option">
+                            <input type="radio" id="template-executive" name="template" value="executive" checked>
+                            <label for="template-executive" class="template-label">
+                                <div class="template-icon"><i class="fas fa-briefcase"></i></div>
+                                <div class="template-name">Executive</div>
+                            </label>
+                        </div>
+                        <div class="template-option">
+                            <input type="radio" id="template-professional" name="template" value="professional">
+                            <label for="template-professional" class="template-label">
+                                <div class="template-icon"><i class="fas fa-user-tie"></i></div>
+                                <div class="template-name">Professional</div>
+                            </label>
+                        </div>
+                        <div class="template-option">
+                            <input type="radio" id="template-modern" name="template" value="modern">
+                            <label for="template-modern" class="template-label">
+                                <div class="template-icon"><i class="fas fa-laptop"></i></div>
+                                <div class="template-name">Modern</div>
+                            </label>
+                        </div>
+                        <div class="template-option">
+                            <input type="radio" id="template-usa" name="template" value="usa">
+                            <label for="template-usa" class="template-label">
+                                <div class="template-icon"><i class="fas fa-star"></i></div>
+                                <div class="template-name">USA Standard</div>
+                            </label>
+                        </div>
+                        <div class="template-option">
+                            <input type="radio" id="template-uk" name="template" value="uk">
+                            <label for="template-uk" class="template-label">
+                                <div class="template-icon"><i class="fas fa-flag"></i></div>
+                                <div class="template-name">UK Standard</div>
+                            </label>
+                        </div>
+                        <div class="template-option">
+                            <input type="radio" id="template-creative" name="template" value="creative">
+                            <label for="template-creative" class="template-label">
+                                <div class="template-icon"><i class="fas fa-paint-brush"></i></div>
+                                <div class="template-name">Creative</div>
+                            </label>
+                        </div>
+                        <div class="template-option">
+                            <input type="radio" id="template-minimalist" name="template" value="minimalist">
+                            <label for="template-minimalist" class="template-label">
+                                <div class="template-icon"><i class="fas fa-circle"></i></div>
+                                <div class="template-name">Minimalist</div>
+                            </label>
+                        </div>
+                        <div class="template-option">
+                            <input type="radio" id="template-corporate" name="template" value="corporate">
+                            <label for="template-corporate" class="template-label">
+                                <div class="template-icon"><i class="fas fa-building"></i></div>
+                                <div class="template-name">Corporate</div>
+                            </label>
+                        </div>
+                        <div class="template-option">
+                            <input type="radio" id="template-academic" name="template" value="academic">
+                            <label for="template-academic" class="template-label">
+                                <div class="template-icon"><i class="fas fa-graduation-cap"></i></div>
+                                <div class="template-name">Academic</div>
+                            </label>
+                        </div>
+                        <div class="template-option">
+                            <input type="radio" id="template-healthcare" name="template" value="healthcare">
+                            <label for="template-healthcare" class="template-label">
+                                <div class="template-icon"><i class="fas fa-heartbeat"></i></div>
+                                <div class="template-name">Healthcare</div>
+                            </label>
+                        </div>
+                        <div class="template-option">
+                            <input type="radio" id="template-sales" name="template" value="sales">
+                            <label for="template-sales" class="template-label">
+                                <div class="template-icon"><i class="fas fa-chart-line"></i></div>
+                                <div class="template-name">Sales</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Personal Information</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" name="firstName" required placeholder="John">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" name="lastName" required placeholder="Doe">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="john@example.com">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567">
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" name="location" placeholder="New York, NY">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="website">Website/Portfolio</label>
+                        <input type="url" id="website" name="website" placeholder="https://yourwebsite.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="summary">Executive Summary</label>
+                        <textarea id="summary" name="summary" rows="4" placeholder="Accomplished professional with proven track record in driving business growth and leading high-performing teams..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Experience -->
+                <div class="form-section">
+                    <h3><i class="fas fa-briefcase"></i> Experience</h3>
+                    
+                    <div id="experienceContainer"></div>
+                    
+                    <button type="button" class="add-btn" onclick="addExperience()">
+                        <i class="fas fa-plus"></i> Add Experience
+                    </button>
+                </div>
+
+                <!-- Education -->
+                <div class="form-section">
+                    <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+                    
+                    <div id="educationContainer"></div>
+                    
+                    <button type="button" class="add-btn" onclick="addEducation()">
+                        <i class="fas fa-plus"></i> Add Education
+                    </button>
+                </div>
+
+                <!-- Skills -->
+                <div class="form-section">
+                    <h3><i class="fas fa-star"></i> Skills</h3>
+                    
+                    <div class="form-group">
+                        <label for="skills">Core Competencies (comma-separated)</label>
+                        <textarea id="skills" name="skills" rows="3" placeholder="Strategic Planning, Team Leadership, Project Management, Data Analysis, Business Development..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Certifications -->
+                <div class="form-section">
+                    <h3><i class="fas fa-certificate"></i> Certifications</h3>
+                    
+                    <div id="certificationsContainer"></div>
+                    
+                    <button type="button" class="add-btn" onclick="addCertification()">
+                        <i class="fas fa-plus"></i> Add Certification
+                    </button>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='index.html'">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="generateResume()">
+                        <i class="fas fa-magic"></i> Generate Professional Resume
+                    </button>
+                    <div class="export-dropdown">
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-download"></i> Export Resume
+                        </button>
+                        <ul class="export-menu">
+                            <li><a href="#" onclick="exportResume('pdf')"><i class="fas fa-file-pdf"></i> PDF Format</a></li>
+                            <li><a href="#" onclick="exportResume('docx')"><i class="fas fa-file-word"></i> Word Document</a></li>
+                            <li><a href="#" onclick="exportResume('html')"><i class="fas fa-code"></i> Web Format</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-panel">
+            <h3 style="margin-bottom: 1.5rem; color: var(--primary);">
+                <i class="fas fa-eye"></i> Professional Preview
+            </h3>
+            <div class="preview-content" id="resumePreview">
+                <div class="preview-header">
+                    <div class="preview-name">John Doe</div>
+                    <div class="preview-contact">
+                        john@example.com | +1 (555) 123-4567 | New York, NY
+                    </div>
+                </div>
+
+                <div class="preview-section">
+                    <div class="preview-section-title">EXECUTIVE SUMMARY</div>
+                    <div class="preview-entry-description">
+                        Accomplished professional with proven track record in driving business growth and leading high-performing teams...
+                    </div>
+                </div>
+
+                <div class="preview-section">
+                    <div class="preview-section-title">PROFESSIONAL EXPERIENCE</div>
+                    <div class="preview-entry">
+                        <div class="preview-entry-title">Senior Manager</div>
+                        <div class="preview-entry-subtitle">Fortune 500 Company | New York, NY | 2020 - Present</div>
+                        <div class="preview-entry-description">
+                            • Led cross-functional teams of 15+ professionals to deliver strategic initiatives<br>
+                            • Increased operational efficiency by 25% through process optimization<br>
+                            • Managed $2M+ annual budget with 98% accuracy
+                        </div>
+                    </div>
+                </div>
+
+                <div class="preview-section">
+                    <div class="preview-section-title">EDUCATION</div>
+                    <div class="preview-entry">
+                        <div class="preview-entry-title">Master of Business Administration</div>
+                        <div class="preview-entry-subtitle">Harvard Business School | 2018</div>
+                    </div>
+                </div>
+
+                <div class="preview-section">
+                    <div class="preview-section-title">CORE COMPETENCIES</div>
+                    <div class="preview-entry-description">
+                        Strategic Planning • Team Leadership • Project Management • Data Analysis • Business Development
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let experienceCount = 0;
+        let educationCount = 0;
+        let certificationCount = 0;
+
+        function addExperience() {
+            const container = document.getElementById('experienceContainer');
+            const id = experienceCount++;
+            
+            const html = `
+                <div class="entry-item" id="experience-${id}">
+                    <div class="entry-header">
+                        <h4>Experience Entry</h4>
+                        <button type="button" class="remove-btn" onclick="removeEntry('experience-${id}')">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Job Title *</label>
+                            <input type="text" placeholder="Senior Developer" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Company *</label>
+                            <input type="text" placeholder="Tech Company Inc" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="month">
+                        </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="month">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea rows="2" placeholder="Describe your responsibilities and achievements..."></textarea>
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function addEducation() {
+            const container = document.getElementById('educationContainer');
+            const id = educationCount++;
+            
+            const html = `
+                <div class="entry-item" id="education-${id}">
+                    <div class="entry-header">
+                        <h4>Education Entry</h4>
+                        <button type="button" class="remove-btn" onclick="removeEntry('education-${id}')">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Degree *</label>
+                            <input type="text" placeholder="Bachelor of Science" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Field of Study *</label>
+                            <input type="text" placeholder="Computer Science" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>University *</label>
+                            <input type="text" placeholder="University Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Graduation Year</label>
+                            <input type="number" placeholder="2020">
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function addCertification() {
+            const container = document.getElementById('certificationsContainer');
+            const id = certificationCount++;
+            
+            const html = `
+                <div class="entry-item" id="certification-${id}">
+                    <div class="entry-header">
+                        <h4>Certification Entry</h4>
+                        <button type="button" class="remove-btn" onclick="removeEntry('certification-${id}')">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Certification Name *</label>
+                            <input type="text" placeholder="AWS Certified Developer" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Issuing Organization *</label>
+                            <input type="text" placeholder="Amazon Web Services" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date Issued</label>
+                            <input type="month">
+                        </div>
+                        <div class="form-group">
+                            <label>Credential URL</label>
+                            <input type="url" placeholder="https://certification-url.com">
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeEntry(id) {
+            const entry = document.getElementById(id);
+            if (entry && confirm('Remove this entry?')) {
+                entry.remove();
+            }
+        }
+
+        function generateResume() {
+            const form = document.getElementById('resumeForm');
+            const formData = new FormData(form);
+            
+            // Validate required fields
+            const firstName = formData.get('firstName');
+            const lastName = formData.get('lastName');
+            const email = formData.get('email');
+            
+            if (!firstName || !lastName || !email) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+
+            showNotification('Generating resume with AI...', 'info');
+            
+            // Call AI service
+            ResumeAPI.generateResume({
+                firstName,
+                lastName,
+                email,
+                phone: formData.get('phone'),
+                location: formData.get('location'),
+                summary: formData.get('summary'),
+                template: formData.get('template'),
+                skills: formData.get('skills')
+            }).then(response => {
+                showNotification('Resume generated successfully!', 'success');
+                StorageManager.saveResume(response);
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+
+        function exportResume(format) {
+            event.preventDefault();
+            showNotification(`Exporting resume as ${format.toUpperCase()}...`, 'info');
+            // Implementation would connect to backend
+        }
+
+        // Update preview in real-time
+        document.getElementById('firstName')?.addEventListener('input', (e) => {
+            const lastName = document.getElementById('lastName')?.value || '';
+            document.querySelector('.preview-name').textContent = `${e.target.value} ${lastName}`;
+        });
+
+        document.getElementById('summary')?.addEventListener('input', (e) => {
+            document.querySelectorAll('.preview-entry-description')[0].textContent = e.target.value || 'Your professional summary will appear here...';
+        });
+
+        // Template change handler
+        document.querySelectorAll('input[name="template"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                updatePreviewTemplate(e.target.value);
+            });
+        });
+
+        function updatePreviewTemplate(template) {
+            const previewContent = document.getElementById('resumePreview');
+            
+            const templates = {
+                'executive': () => {
+                    previewContent.innerHTML = `
+                        <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 3rem 2rem; margin: -2rem -2rem 2rem -2rem; position: relative; overflow: hidden;">
+                            <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.3;"></div>
+                            <h1 style="margin: 0; font-size: 3rem; font-weight: 700; letter-spacing: -1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">JOHN DOE</h1>
+                            <p style="margin: 0.8rem 0 0 0; font-size: 1.3rem; opacity: 0.95; font-weight: 300;">Chief Executive Officer</p>
+                            <div style="margin-top: 1.5rem; display: flex; gap: 2rem; font-size: 0.95rem; opacity: 0.9;">
+                                <span>📧 john.doe@executive.com</span>
+                                <span>📱 +1 (555) 123-4567</span>
+                                <span>📍 Manhattan, NY</span>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; font-family: 'Georgia', serif; padding: 1rem 0;">
+                            <div>
+                                <div style="margin-bottom: 2.5rem;">
+                                    <h3 style="color: #1e3a8a; font-size: 1.2rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px; border-bottom: 3px solid #1e3a8a; padding-bottom: 0.5rem; font-weight: 800;">EXECUTIVE SUMMARY</h3>
+                                    <p style="line-height: 1.7; text-align: justify; font-size: 1.05rem; color: #374151;">Visionary C-suite executive with 15+ years of transformational leadership experience. Proven track record of scaling organizations from startup to IPO, driving $500M+ in revenue growth, and leading digital transformation initiatives across Fortune 500 companies.</p>
+                                </div>
+                                <div>
+                                    <h3 style="color: #1e3a8a; font-size: 1.2rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px; border-bottom: 3px solid #1e3a8a; padding-bottom: 0.5rem; font-weight: 800;">EXECUTIVE EXPERIENCE</h3>
+                                    <div style="margin-bottom: 2rem; padding: 1.5rem; background: #f8fafc; border-left: 5px solid #1e3a8a; border-radius: 0 8px 8px 0;">
+                                        <h4 style="margin: 0; font-weight: 700; color: #1f2937; font-size: 1.1rem;">Chief Executive Officer</h4>
+                                        <p style="color: #1e3a8a; font-weight: 600; margin: 0.3rem 0; font-size: 0.95rem;">Global Tech Solutions Inc. | New York, NY | 2020 - Present</p>
+                                        <ul style="margin: 1rem 0; padding-left: 1.5rem; color: #374151; line-height: 1.6;">
+                                            <li>Orchestrated company-wide digital transformation, resulting in 300% revenue growth</li>
+                                            <li>Led strategic acquisitions worth $150M, expanding market presence across 12 countries</li>
+                                            <li>Built and mentored C-suite leadership team of 8 executives</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #f8fafc, #e2e8f0); padding: 2rem; border-radius: 12px; border: 1px solid #cbd5e1; height: fit-content;">
+                                <div style="margin-bottom: 2rem;">
+                                    <h3 style="color: #1e3a8a; font-size: 1rem; margin-bottom: 1rem; text-transform: uppercase; font-weight: 700;">EDUCATION</h3>
+                                    <h4 style="margin: 0; font-weight: 700; font-size: 0.95rem; color: #1f2937;">MBA, Strategic Management</h4>
+                                    <p style="margin: 0.3rem 0; font-size: 0.85rem; color: #666; font-style: italic;">Harvard Business School | 2005</p>
+                                    <h4 style="margin: 1rem 0 0 0; font-weight: 700; font-size: 0.95rem; color: #1f2937;">BS, Computer Science</h4>
+                                    <p style="margin: 0.3rem 0; font-size: 0.85rem; color: #666; font-style: italic;">MIT | 2003</p>
+                                </div>
+                                <div>
+                                    <h3 style="color: #1e3a8a; font-size: 1rem; margin-bottom: 1rem; text-transform: uppercase; font-weight: 700;">CORE COMPETENCIES</h3>
+                                    <div style="font-size: 0.9rem; line-height: 2; color: #374151; font-weight: 500;">
+                                        ▪ Strategic Vision & Planning<br>
+                                        ▪ M&A and Corporate Development<br>
+                                        ▪ Digital Transformation<br>
+                                        ▪ Global Team Leadership<br>
+                                        ▪ Stakeholder Management<br>
+                                        ▪ P&L Management ($500M+)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                },
+                'professional': () => {
+                    previewContent.innerHTML = `
+                        <div style="display: grid; grid-template-columns: 280px 1fr; min-height: 700px; font-family: 'Segoe UI', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden;">
+                            <div style="background: linear-gradient(180deg, #0f766e, #14b8a6); color: white; padding: 2.5rem 2rem;">
+                                <div style="text-align: center; margin-bottom: 3rem;">
+                                    <div style="width: 120px; height: 120px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; border: 4px solid rgba(255,255,255,0.3); backdrop-filter: blur(10px);">
+                                        <span style="font-size: 2.5rem; font-weight: 700;">JD</span>
+                                    </div>
+                                    <h2 style="margin: 0; font-size: 1.4rem; font-weight: 600; letter-spacing: 1px;">JOHN DOE</h2>
+                                    <p style="margin: 0.8rem 0 0 0; font-size: 1rem; opacity: 0.9; font-weight: 300;">Senior Professional</p>
+                                </div>
+                                <div style="margin-bottom: 2.5rem;">
+                                    <h3 style="font-size: 1rem; margin-bottom: 1.2rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem;">CONTACT</h3>
+                                    <div style="font-size: 0.85rem; line-height: 2; opacity: 0.95;">
+                                        <div style="display: flex; align-items: center; margin-bottom: 0.8rem;"><span style="margin-right: 0.8rem; font-size: 1rem;">📧</span> john.doe@professional.com</div>
+                                        <div style="display: flex; align-items: center; margin-bottom: 0.8rem;"><span style="margin-right: 0.8rem; font-size: 1rem;">📱</span> +1 (555) 123-4567</div>
+                                        <div style="display: flex; align-items: center; margin-bottom: 0.8rem;"><span style="margin-right: 0.8rem; font-size: 1rem;">📍</span> Chicago, IL</div>
+                                        <div style="display: flex; align-items: center;"><span style="margin-right: 0.8rem; font-size: 1rem;">🔗</span> linkedin.com/in/johndoe</div>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 2.5rem;">
+                                    <h3 style="font-size: 1rem; margin-bottom: 1.2rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem;">CORE SKILLS</h3>
+                                    <div style="font-size: 0.85rem; line-height: 2.2; opacity: 0.95;">
+                                        • Strategic Planning & Analysis<br>
+                                        • Team Leadership & Development<br>
+                                        • Project & Program Management<br>
+                                        • Business Process Optimization<br>
+                                        • Stakeholder Management<br>
+                                        • Financial Planning & Budgeting
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 style="font-size: 1rem; margin-bottom: 1.2rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem;">LANGUAGES</h3>
+                                    <div style="font-size: 0.85rem; line-height: 2; opacity: 0.95;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;"><span>English</span><span style="font-weight: 600;">Native</span></div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;"><span>Spanish</span><span style="font-weight: 600;">Fluent</span></div>
+                                        <div style="display: flex; justify-content: space-between;"><span>French</span><span style="font-weight: 600;">Intermediate</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="padding: 2.5rem; background: white;">
+                                <div style="margin-bottom: 2.5rem;">
+                                    <h3 style="color: #0f766e; font-size: 1.3rem; margin-bottom: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; position: relative;">
+                                        <span style="border-bottom: 3px solid #14b8a6; padding-bottom: 0.3rem;">PROFESSIONAL SUMMARY</span>
+                                    </h3>
+                                    <p style="line-height: 1.7; color: #374151; font-size: 1rem; text-align: justify;">Results-driven professional with 10+ years of experience in strategic planning, team leadership, and operational excellence. Proven ability to drive organizational growth, optimize processes, and deliver exceptional results in fast-paced environments. Expertise in cross-functional collaboration and stakeholder management.</p>
+                                </div>
+                                <div style="margin-bottom: 2.5rem;">
+                                    <h3 style="color: #0f766e; font-size: 1.3rem; margin-bottom: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; position: relative;">
+                                        <span style="border-bottom: 3px solid #14b8a6; padding-bottom: 0.3rem;">PROFESSIONAL EXPERIENCE</span>
+                                    </h3>
+                                    <div style="margin-bottom: 2rem; padding: 1.5rem; background: #f0fdfa; border-left: 4px solid #14b8a6; border-radius: 0 8px 8px 0; position: relative;">
+                                        <div style="position: absolute; top: 1.5rem; right: 1.5rem; background: #14b8a6; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">2020 - PRESENT</div>
+                                        <h4 style="margin: 0; font-weight: 700; color: #0f766e; font-size: 1.1rem;">Senior Manager</h4>
+                                        <p style="margin: 0.5rem 0; color: #6b7280; font-weight: 600; font-size: 0.95rem;">Global Solutions Inc. | Chicago, IL</p>
+                                        <ul style="margin: 1rem 0; padding-left: 1.5rem; color: #374151; line-height: 1.7;">
+                                            <li>Led cross-functional teams of 20+ professionals across multiple departments</li>
+                                            <li>Implemented strategic initiatives resulting in 35% increase in operational efficiency</li>
+                                            <li>Managed annual budget of $5M+ with consistent cost optimization achievements</li>
+                                            <li>Developed and executed training programs for 100+ team members</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 style="color: #0f766e; font-size: 1.3rem; margin-bottom: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; position: relative;">
+                                        <span style="border-bottom: 3px solid #14b8a6; padding-bottom: 0.3rem;">EDUCATION & CERTIFICATIONS</span>
+                                    </h3>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                                        <div style="padding: 1.2rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                            <h4 style="margin: 0; font-weight: 700; color: #1f2937; font-size: 1rem;">Master of Business Administration</h4>
+                                            <p style="margin: 0.5rem 0; color: #6b7280; font-size: 0.9rem; font-style: italic;">Northwestern Kellogg | 2018</p>
+                                        </div>
+                                        <div style="padding: 1.2rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                            <h4 style="margin: 0; font-weight: 700; color: #1f2937; font-size: 1rem;">PMP Certification</h4>
+                                            <p style="margin: 0.5rem 0; color: #6b7280; font-size: 0.9rem; font-style: italic;">Project Management Institute | 2019</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                },
+                'modern': () => {
+                    previewContent.innerHTML = `
+                        <div style="max-width: 800px; margin: 0 auto; font-family: 'Inter', 'Helvetica Neue', sans-serif; background: #ffffff; position: relative; overflow: hidden;">
+                            <!-- Geometric Background Elements -->
+                            <div style="position: absolute; top: 0; right: 0; width: 300px; height: 300px; background: linear-gradient(135deg, #667eea, #764ba2); opacity: 0.1; border-radius: 50%; transform: translate(100px, -100px);"></div>
+                            <div style="position: absolute; bottom: 0; left: 0; width: 200px; height: 200px; background: linear-gradient(135deg, #f093fb, #f5576c); opacity: 0.1; border-radius: 50%; transform: translate(-50px, 50px);"></div>
+                            
+                            <!-- Header Section -->
+                            <div style="position: relative; z-index: 2; text-align: center; padding: 4rem 2rem 3rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);">
+                                <h1 style="margin: 0; font-size: 3.5rem; font-weight: 300; letter-spacing: -2px; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">JOHN DOE</h1>
+                                <div style="width: 60px; height: 3px; background: rgba(255,255,255,0.8); margin: 1rem auto; border-radius: 2px;"></div>
+                                <p style="margin: 1rem 0 0 0; font-size: 1.2rem; font-weight: 300; opacity: 0.95; letter-spacing: 1px;">Creative Professional</p>
+                                <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 3rem; font-size: 0.95rem; opacity: 0.9; flex-wrap: wrap;">
+                                    <span style="display: flex; align-items: center; gap: 0.5rem;"><i style="font-size: 1.1rem;">📧</i> john.doe@creative.com</span>
+                                    <span style="display: flex; align-items: center; gap: 0.5rem;"><i style="font-size: 1.1rem;">📱</i> +1 (555) 123-4567</span>
+                                    <span style="display: flex; align-items: center; gap: 0.5rem;"><i style="font-size: 1.1rem;">📍</i> San Francisco, CA</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Content Grid -->
+                            <div style="position: relative; z-index: 2; padding: 3rem 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;">
+                                <!-- Left Column -->
+                                <div>
+                                    <div style="margin-bottom: 3rem;">
+                                        <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 3px; color: #667eea; font-weight: 600; position: relative;">
+                                            <span style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">ABOUT ME</span>
+                                            <div style="position: absolute; bottom: -8px; left: 0; width: 40px; height: 2px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 1px;"></div>
+                                        </h3>
+                                        <p style="line-height: 1.8; color: #4a5568; font-size: 1rem; text-align: justify;">Innovative and detail-oriented professional with a passion for creating exceptional user experiences. Combining technical expertise with creative vision to deliver impactful solutions that drive business growth and user engagement.</p>
+                                    </div>
+                                    
+                                    <div style="margin-bottom: 3rem;">
+                                        <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 3px; color: #667eea; font-weight: 600; position: relative;">
+                                            <span style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">EXPERIENCE</span>
+                                            <div style="position: absolute; bottom: -8px; left: 0; width: 40px; height: 2px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 1px;"></div>
+                                        </h3>
+                                        <div style="position: relative; padding-left: 2rem; border-left: 2px solid #e2e8f0;">
+                                            <div style="position: absolute; left: -6px; top: 0; width: 10px; height: 10px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%;"></div>
+                                            <div style="margin-bottom: 2rem;">
+                                                <h4 style="margin: 0; font-weight: 600; color: #2d3748; font-size: 1.1rem;">Senior Designer</h4>
+                                                <p style="margin: 0.3rem 0; color: #667eea; font-weight: 500; font-size: 0.9rem;">Creative Agency Inc. | San Francisco, CA</p>
+                                                <p style="margin: 0.3rem 0 1rem 0; color: #a0aec0; font-size: 0.85rem; font-style: italic;">2020 - Present</p>
+                                                <ul style="margin: 0; padding-left: 1.2rem; color: #4a5568; line-height: 1.7; font-size: 0.95rem;">
+                                                    <li>Led design initiatives for 50+ high-profile client projects</li>
+                                                    <li>Increased user engagement by 40% through innovative UX solutions</li>
+                                                    <li>Mentored junior designers and established design system standards</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Right Column -->
+                                <div>
+                                    <div style="margin-bottom: 3rem;">
+                                        <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 3px; color: #667eea; font-weight: 600; position: relative;">
+                                            <span style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">SKILLS</span>
+                                            <div style="position: absolute; bottom: -8px; left: 0; width: 40px; height: 2px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 1px;"></div>
+                                        </h3>
+                                        <div style="display: grid; gap: 1rem;">
+                                            <div style="background: linear-gradient(135deg, #f7fafc, #edf2f7); padding: 1rem; border-radius: 8px; border-left: 4px solid #667eea;">
+                                                <h4 style="margin: 0 0 0.5rem 0; color: #2d3748; font-size: 0.9rem; font-weight: 600;">Design & Creative</h4>
+                                                <p style="margin: 0; color: #4a5568; font-size: 0.85rem; line-height: 1.6;">UI/UX Design • Adobe Creative Suite • Figma • Sketch • Prototyping</p>
+                                            </div>
+                                            <div style="background: linear-gradient(135deg, #f7fafc, #edf2f7); padding: 1rem; border-radius: 8px; border-left: 4px solid #764ba2;">
+                                                <h4 style="margin: 0 0 0.5rem 0; color: #2d3748; font-size: 0.9rem; font-weight: 600;">Technical</h4>
+                                                <p style="margin: 0; color: #4a5568; font-size: 0.85rem; line-height: 1.6;">HTML/CSS • JavaScript • React • Design Systems • Responsive Design</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="margin-bottom: 3rem;">
+                                        <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 3px; color: #667eea; font-weight: 600; position: relative;">
+                                            <span style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">EDUCATION</span>
+                                            <div style="position: absolute; bottom: -8px; left: 0; width: 40px; height: 2px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 1px;"></div>
+                                        </h3>
+                                        <div style="background: linear-gradient(135deg, #f7fafc, #edf2f7); padding: 1.5rem; border-radius: 12px; border: 1px solid #e2e8f0;">
+                                            <h4 style="margin: 0; font-weight: 600; color: #2d3748; font-size: 1rem;">Bachelor of Fine Arts</h4>
+                                            <p style="margin: 0.5rem 0; color: #667eea; font-weight: 500; font-size: 0.9rem;">Graphic Design</p>
+                                            <p style="margin: 0; color: #a0aec0; font-size: 0.85rem; font-style: italic;">Art Institute of California | 2018</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 3px; color: #667eea; font-weight: 600; position: relative;">
+                                            <span style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">ACHIEVEMENTS</span>
+                                            <div style="position: absolute; bottom: -8px; left: 0; width: 40px; height: 2px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 1px;"></div>
+                                        </h3>
+                                        <div style="display: grid; gap: 0.8rem;">
+                                            <div style="display: flex; align-items: center; gap: 1rem; padding: 0.8rem; background: rgba(102, 126, 234, 0.05); border-radius: 8px;">
+                                                <div style="width: 8px; height: 8px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%;"></div>
+                                                <span style="color: #4a5568; font-size: 0.9rem;">Design Excellence Award 2023</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 1rem; padding: 0.8rem; background: rgba(102, 126, 234, 0.05); border-radius: 8px;">
+                                                <div style="width: 8px; height: 8px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%;"></div>
+                                                <span style="color: #4a5568; font-size: 0.9rem;">UX Innovation Recognition</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                },
+                'usa': () => {
+                    previewContent.innerHTML = `
+                        <div style="font-family: 'Calibri', 'Arial', sans-serif; max-width: 750px; margin: 0 auto; background: white; padding: 1.5rem; line-height: 1.5;">
+                            <!-- Header -->
+                            <div style="text-align: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 3px solid #2c5aa0;">
+                                <h1 style="margin: 0; font-size: 2.5rem; font-weight: bold; color: #2c5aa0; letter-spacing: 1px;">JOHN DOE</h1>
+                                <div style="margin-top: 1rem; font-size: 1rem; color: #555; line-height: 1.8;">
+                                    Faisalabad, Pakistan (Open to Remote & Relocation)<br>
+                                    📞 +92-XXXXXXXXXX | ✉️ john.doe@email.com<br>
+                                    🌐 Portfolio: https://dreampins.online | 💻 GitHub: https://github.com/yourusername<br>
+                                    🔗 LinkedIn: linkedin.com/in/johndoe
+                                </div>
+                            </div>
+                            
+                            <!-- Professional Summary -->
+                            <div style="margin-bottom: 2rem;">
+                                <h2 style="font-size: 1.3rem; font-weight: bold; color: #2c5aa0; margin-bottom: 0.8rem; text-transform: uppercase; border-bottom: 2px solid #2c5aa0; padding-bottom: 0.3rem;">Professional Summary</h2>
+                                <p style="margin: 0; color: #333; text-align: justify; font-size: 1rem;">Entry-level <strong>Web Developer</strong> with hands-on experience in building responsive and user-friendly websites using modern web technologies. Strong foundation in front-end development, version control, and project deployment. Quick learner with a problem-solving mindset, seeking a junior or entry-level role with a US-based company to grow technical and professional skills.</p>
+                            </div>
+                            
+                            <!-- Technical Skills -->
+                            <div style="margin-bottom: 2rem;">
+                                <h2 style="font-size: 1.3rem; font-weight: bold; color: #2c5aa0; margin-bottom: 0.8rem; text-transform: uppercase; border-bottom: 2px solid #2c5aa0; padding-bottom: 0.3rem;">Technical Skills</h2>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                    <ul style="margin: 0; padding-left: 1.2rem; color: #333;">
+                                        <li>HTML5, CSS3, JavaScript (ES6)</li>
+                                        <li>Responsive Web Design</li>
+                                        <li>Git, GitHub</li>
+                                    </ul>
+                                    <ul style="margin: 0; padding-left: 1.2rem; color: #333;">
+                                        <li>Basic React.js</li>
+                                        <li>Website Hosting & Domain Configuration</li>
+                                        <li>Debugging & Performance Optimization</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Projects -->
+                            <div style="margin-bottom: 2rem;">
+                                <h2 style="font-size: 1.3rem; font-weight: bold; color: #2c5aa0; margin-bottom: 0.8rem; text-transform: uppercase; border-bottom: 2px solid #2c5aa0; padding-bottom: 0.3rem;">Projects</h2>
+                                
+                                <div style="margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-left: 4px solid #2c5aa0;">
+                                    <h3 style="font-size: 1.1rem; font-weight: bold; color: #333; margin: 0 0 0.3rem 0;">Dreampins – E-commerce Website</h3>
+                                    <p style="font-style: italic; color: #666; margin: 0 0 0.5rem 0; font-size: 0.95rem;">Personal Project</p>
+                                    <ul style="margin: 0; padding-left: 1.2rem; color: #333;">
+                                        <li>Developed a fully responsive e-commerce website using HTML, CSS, and JavaScript</li>
+                                        <li>Created product listing and individual product pages</li>
+                                        <li>Set up custom domain and managed deployment</li>
+                                        <li>Focused on clean UI, accessibility, and usability</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-left: 4px solid #2c5aa0;">
+                                    <h3 style="font-size: 1.1rem; font-weight: bold; color: #333; margin: 0 0 0.3rem 0;">AI Resume Maker</h3>
+                                    <p style="font-style: italic; color: #666; margin: 0 0 0.5rem 0; font-size: 0.95rem;">Personal Project</p>
+                                    <ul style="margin: 0; padding-left: 1.2rem; color: #333;">
+                                        <li>Built a resume builder application with AI-assisted content generation</li>
+                                        <li>Designed a clean and professional user interface</li>
+                                        <li>Improved user experience through structured layouts</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Experience -->
+                            <div style="margin-bottom: 2rem;">
+                                <h2 style="font-size: 1.3rem; font-weight: bold; color: #2c5aa0; margin-bottom: 0.8rem; text-transform: uppercase; border-bottom: 2px solid #2c5aa0; padding-bottom: 0.3rem;">Experience</h2>
+                                <div style="padding: 1rem; background: #f8f9fa; border-left: 4px solid #2c5aa0;">
+                                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+                                        <h3 style="font-size: 1.1rem; font-weight: bold; color: #333; margin: 0;">Freelance Web Developer</h3>
+                                        <span style="font-size: 0.95rem; color: #666; font-weight: 600;">2024 – Present</span>
+                                    </div>
+                                    <p style="font-style: italic; color: #666; margin: 0 0 0.5rem 0; font-size: 0.95rem;">Self-Employed</p>
+                                    <ul style="margin: 0; padding-left: 1.2rem; color: #333;">
+                                        <li>Built and maintained small web projects for practice and clients</li>
+                                        <li>Fixed UI/UX issues and optimized website performance</li>
+                                        <li>Translated user requirements into functional web solutions</li>
+                                        <li>Used GitHub for version control and collaboration</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Education -->
+                            <div style="margin-bottom: 2rem;">
+                                <h2 style="font-size: 1.3rem; font-weight: bold; color: #2c5aa0; margin-bottom: 0.8rem; text-transform: uppercase; border-bottom: 2px solid #2c5aa0; padding-bottom: 0.3rem;">Education</h2>
+                                <div style="padding: 1rem; background: #f8f9fa; border-left: 4px solid #2c5aa0;">
+                                    <h3 style="font-size: 1.1rem; font-weight: bold; color: #333; margin: 0;">IT / Computer Studies (In Progress)</h3>
+                                    <p style="color: #666; margin: 0.3rem 0 0 0; font-size: 0.95rem;">Akhuwat Institute, Faisalabad</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Bottom Section -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem;">
+                                <div>
+                                    <h2 style="font-size: 1.2rem; font-weight: bold; color: #2c5aa0; margin-bottom: 0.8rem; text-transform: uppercase;">Languages</h2>
+                                    <ul style="margin: 0; padding-left: 1.2rem; color: #333;">
+                                        <li>English – Professional Working Proficiency</li>
+                                        <li>Urdu – Native</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h2 style="font-size: 1.2rem; font-weight: bold; color: #2c5aa0; margin-bottom: 0.8rem; text-transform: uppercase;">Additional Information</h2>
+                                    <ul style="margin: 0; padding-left: 1.2rem; color: #333;">
+                                        <li>Available for remote work</li>
+                                        <li>Willing to relocate if required</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- References -->
+                            <div style="text-align: center; padding-top: 1.5rem; border-top: 2px solid #2c5aa0;">
+                                <p style="margin: 0; color: #666; font-style: italic; font-size: 1rem;">References available upon request</p>
+                            </div>
+                        </div>
+                    `;
+                },
+                'uk': () => {
+                    previewContent.innerHTML = `
+                        <div style="font-family: 'Arial', sans-serif; max-width: 700px; margin: 0 auto; background: white; padding: 0; line-height: 1.4;">
+                            <div style="text-align: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #333;">
+                                <h1 style="margin: 0; font-size: 2rem; font-weight: bold; color: #333; text-transform: uppercase;">JOHN DOE</h1>
+                                <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
+                                    Faisalabad, Pakistan<br>
+                                    📞 +92-XXXXXXXXXX | ✉️ john.doe@email.com<br>
+                                    🔗 Portfolio: https://dreampins.online | 🔗 GitHub: https://github.com/yourusername
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1.5rem;">
+                                <h2 style="font-size: 1.1rem; font-weight: bold; color: #333; margin-bottom: 0.5rem; text-transform: uppercase;">Professional Summary</h2>
+                                <p style="margin: 0; color: #444; text-align: justify;">Motivated and self-driven Junior Web Developer with hands-on experience in building responsive websites using modern web technologies.</p>
+                            </div>
+                        </div>
+                    `;
+                },
+                'creative': () => {
+                    previewContent.innerHTML = `
+                        <div style="font-family: 'Poppins', 'Segoe UI', sans-serif; max-width: 800px; margin: 0 auto; background: linear-gradient(135deg, #ffeaa7 0%, #fd79a8 100%); padding: 3px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                            <div style="background: white; border-radius: 18px; overflow: hidden;">
+                                <!-- Header with colorful gradient -->
+                                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); padding: 3rem 2rem; text-align: center; position: relative; overflow: hidden;">
+                                    <div style="position: absolute; top: -50px; left: -50px; width: 150px; height: 150px; background: rgba(255,255,255,0.2); border-radius: 50%; animation: float 6s ease-in-out infinite;"></div>
+                                    <div style="position: absolute; bottom: -30px; right: -30px; width: 100px; height: 100px; background: rgba(255,255,255,0.15); border-radius: 50%; animation: float 8s ease-in-out infinite;"></div>
+                                    <div style="position: relative; z-index: 2;">
+                                        <div style="width: 140px; height: 140px; margin: 0 auto 1.5rem; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 5px solid rgba(255,255,255,0.5);">
+                                            <span style="font-size: 3rem; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">JD</span>
+                                        </div>
+                                        <h1 style="margin: 0; font-size: 2.8rem; font-weight: 700; color: white; text-shadow: 2px 4px 10px rgba(0,0,0,0.3); letter-spacing: 2px;">JOHN DOE</h1>
+                                        <p style="margin: 1rem 0 0 0; font-size: 1.4rem; color: rgba(255,255,255,0.95); font-weight: 300; letter-spacing: 1px;">Creative Professional</p>
+                                        <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; color: white; font-size: 0.95rem;">
+                                            <span>📧 john@creative.com</span>
+                                            <span>📱 +1 (555) 123-4567</span>
+                                            <span>🌍 San Francisco, CA</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Content -->
+                                <div style="padding: 3rem 2rem;">
+                                    <!-- About Section with colorful accent -->
+                                    <div style="margin-bottom: 3rem; padding: 2rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(247, 37, 133, 0.05)); border-radius: 15px; border-left: 6px solid #667eea;">
+                                        <h2 style="margin: 0 0 1rem 0; font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-transform: uppercase; letter-spacing: 2px;">✨ About Me</h2>
+                                        <p style="margin: 0; line-height: 1.8; color: #333; font-size: 1.05rem;">Passionate creative professional with a unique blend of artistic vision and technical expertise. I transform ideas into stunning visual experiences that captivate audiences and drive engagement.</p>
+                                    </div>
+                                    
+                                    <!-- Skills with colorful tags -->
+                                    <div style="margin-bottom: 3rem;">
+                                        <h2 style="margin: 0 0 1.5rem 0; font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-transform: uppercase; letter-spacing: 2px;">🎨 Creative Skills</h2>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                                            <span style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 25px; font-weight: 600; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">UI/UX Design</span>
+                                            <span style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #f093fb, #f5576c); color: white; border-radius: 25px; font-weight: 600; box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);">Branding</span>
+                                            <span style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; border-radius: 25px; font-weight: 600; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);">Illustration</span>
+                                            <span style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; border-radius: 25px; font-weight: 600; box-shadow: 0 4px 15px rgba(67, 233, 123, 0.4);">Motion Graphics</span>
+                                            <span style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #fa709a, #fee140); color: white; border-radius: 25px; font-weight: 600; box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4);">3D Design</span>
+                                            <span style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #30cfd0, #330867); color: white; border-radius: 25px; font-weight: 600; box-shadow: 0 4px 15px rgba(48, 207, 208, 0.4);">Photography</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Experience -->
+                                    <div style="margin-bottom: 3rem;">
+                                        <h2 style="margin: 0 0 1.5rem 0; font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-transform: uppercase; letter-spacing: 2px;">💼 Experience</h2>
+                                        <div style="position: relative; padding-left: 3rem; border-left: 3px solid #e2e8f0;">
+                                            <div style="position: absolute; left: -9px; top: 5px; width: 15px; height: 15px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; box-shadow: 0 0 0 4px white, 0 0 0 6px #667eea;"></div>
+                                            <div style="margin-bottom: 2.5rem; padding: 1.5rem; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid #f0f0f0;">
+                                                <h3 style="margin: 0; font-size: 1.3rem; font-weight: 700; color: #333;">Senior Creative Designer</h3>
+                                                <p style="margin: 0.5rem 0; color: #667eea; font-weight: 600; font-size: 1rem;">Creative Studio Inc. | 2020 - Present</p>
+                                                <ul style="margin: 1rem 0 0 0; padding-left: 1.5rem; color: #555; line-height: 1.8;">
+                                                    <li>Led creative direction for 50+ brand campaigns</li>
+                                                    <li>Increased client engagement by 65% through innovative design</li>
+                                                    <li>Mentored team of 8 junior designers</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Education with icon -->
+                                    <div>
+                                        <h2 style="margin: 0 0 1.5rem 0; font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-transform: uppercase; letter-spacing: 2px;">🎓 Education</h2>
+                                        <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(247, 37, 133, 0.05)); border-radius: 12px; border: 2px solid rgba(102, 126, 234, 0.2);">
+                                            <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #333;">Bachelor of Fine Arts</h3>
+                                            <p style="margin: 0.5rem 0; color: #667eea; font-weight: 600;">Graphic Design | Art Institute | 2018</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                },
+                'minimalist': () => {
+                    previewContent.innerHTML = `
+                        <div style="font-family: 'Helvetica Neue', 'Arial', sans-serif; max-width: 700px; margin: 0 auto; background: white; padding: 4rem 3rem; line-height: 1.6;">
+                            <!-- Minimalist Header -->
+                            <div style="text-align: center; padding-bottom: 3rem; border-bottom: 1px solid #000; margin-bottom: 3rem;">
+                                <h1 style="margin: 0; font-size: 3rem; font-weight: 300; color: #000; letter-spacing: 8px; text-transform: uppercase;">John Doe</h1>
+                                <p style="margin: 1.5rem 0 0 0; font-size: 1.1rem; color: #666; font-weight: 300; letter-spacing: 3px;">DESIGNER</p>
+                            </div>
+                            
+                            <!-- Contact - Clean single line -->
+                            <div style="text-align: center; margin-bottom: 4rem; font-size: 0.9rem; color: #333; letter-spacing: 1px;">
+                                john@minimal.com  •  +1 555 123 4567  •  New York, NY
+                            </div>
+                            
+                            <!-- About -->
+                            <div style="margin-bottom: 4rem;">
+                                <h2 style="margin: 0 0 1.5rem 0; font-size: 0.9rem; font-weight: 600; color: #000; letter-spacing: 3px; text-transform: uppercase;">About</h2>
+                                <p style="margin: 0; color: #333; font-size: 1rem; line-height: 1.8; text-align: justify; font-weight: 300;">Minimalist designer focused on creating clean, functional, and timeless work. I believe in the power of simplicity and the importance of every detail in creating meaningful user experiences.</p>
+                            </div>
+                            
+                            <!-- Experience -->
+                            <div style="margin-bottom: 4rem;">
+                                <h2 style="margin: 0 0 2rem 0; font-size: 0.9rem; font-weight: 600; color: #000; letter-spacing: 3px; text-transform: uppercase;">Experience</h2>
+                                
+                                <div style="margin-bottom: 3rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+                                        <h3 style="margin: 0; font-size: 1.1rem; font-weight: 500; color: #000;">Senior Designer</h3>
+                                        <span style="font-size: 0.85rem; color: #666; font-weight: 300;">2020 — Present</span>
+                                    </div>
+                                    <p style="margin: 0 0 1rem 0; font-size: 0.95rem; color: #666; font-weight: 300; font-style: italic;">Minimal Studio</p>
+                                    <ul style="margin: 0; padding-left: 1.2rem; color: #333; font-weight: 300; line-height: 1.8; list-style-type: none;">
+                                        <li style="position: relative; padding-left: 1rem; margin-bottom: 0.5rem;">— Led design for flagship products serving 1M+ users</li>
+                                        <li style="position: relative; padding-left: 1rem; margin-bottom: 0.5rem;">— Established design system and brand guidelines</li>
+                                        <li style="position: relative; padding-left: 1rem;">— Collaborated with cross-functional teams</li>
+                                    </ul>
+                                </div>
+                                
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+                                        <h3 style="margin: 0; font-size: 1.1rem; font-weight: 500; color: #000;">Designer</h3>
+                                        <span style="font-size: 0.85rem; color: #666; font-weight: 300;">2018 — 2020</span>
+                                    </div>
+                                    <p style="margin: 0 0 1rem 0; font-size: 0.95rem; color: #666; font-weight: 300; font-style: italic;">Design Collective</p>
+                                    <ul style="margin: 0; padding-left: 1.2rem; color: #333; font-weight: 300; line-height: 1.8; list-style-type: none;">
+                                        <li style="position: relative; padding-left: 1rem; margin-bottom: 0.5rem;">— Created clean interfaces for web and mobile</li>
+                                        <li style="position: relative; padding-left: 1rem;">— Worked with diverse range of clients</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Skills -->
+                            <div style="margin-bottom: 4rem;">
+                                <h2 style="margin: 0 0 1.5rem 0; font-size: 0.9rem; font-weight: 600; color: #000; letter-spacing: 3px; text-transform: uppercase;">Skills</h2>
+                                <div style="color: #333; font-size: 0.95rem; line-height: 2; font-weight: 300;">
+                                    UI Design  •  UX Design  •  Prototyping  •  Design Systems  •  Typography  •  Branding
+                                </div>
+                            </div>
+                            
+                            <!-- Education -->
+                            <div>
+                                <h2 style="margin: 0 0 1.5rem 0; font-size: 0.9rem; font-weight: 600; color: #000; letter-spacing: 3px; text-transform: uppercase;">Education</h2>
+                                <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 1rem; font-weight: 500; color: #000;">Bachelor of Design</h3>
+                                        <p style="margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #666; font-weight: 300;">Design University</p>
+                                    </div>
+                                    <span style="font-size: 0.85rem; color: #666; font-weight: 300;">2018</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                },
+                'academic': () => {
+                    previewContent.innerHTML = `
+                        <div style="font-family: 'Garamond', 'Times New Roman', serif; max-width: 750px; margin: 0 auto; background: white; padding: 3rem; border: 1px solid #ddd;">
+                            <!-- Academic Header -->
+                            <div style="text-align: center; margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 3px double #2c3e50;">
+                                <h1 style="margin: 0; font-size: 2.5rem; font-weight: 700; color: #2c3e50; letter-spacing: 1px;">Dr. John Doe</h1>
+                                <p style="margin: 1rem 0 0.5rem 0; font-size: 1.2rem; color: #34495e; font-style: italic;">Ph.D., Associate Professor</p>
+                                <p style="margin: 0; font-size: 0.95rem; color: #555;">Department of Computer Science | University of Excellence</p>
+                                <div style="margin-top: 1.5rem; font-size: 0.9rem; color: #555;">
+                                    📧 john.doe@university.edu | 📱 +1 (555) 123-4567 | 🔗 scholar.google.com/johndoe
+                                </div>
+                            </div>
+                            
+                            <!-- Research Interests -->
+                            <div style="margin-bottom: 2.5rem;">
+                                <h2 style="margin: 0 0 1rem 0; font-size: 1.3rem; font-weight: 700; color: #2c3e50; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #3498db; padding-bottom: 0.5rem;">Research Interests</h2>
+                                <p style="margin: 0; line-height: 1.8; color: #333; font-size: 1rem; text-align: justify;">
+                                    Artificial Intelligence, Machine Learning, Natural Language Processing, and Human-Computer Interaction with a focus on developing intelligent systems that enhance human decision-making and productivity.
+                                </p>
+                            </div>
+                            
+                            <!-- Education -->
+                            <div style="margin-bottom: 2.5rem;">
+                                <h2 style="margin: 0 0 1.5rem 0; font-size: 1.3rem; font-weight: 700; color: #2c3e50; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #3498db; padding-bottom: 0.5rem;">Education</h2>
+                                <div style="margin-bottom: 1.5rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                        <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #2c3e50;">Ph.D. in Computer Science</h3>
+                                        <span style="font-size: 0.95rem; color: #666; font-style: italic;">2015</span>
+                                    </div>
+                                    <p style="margin: 0.3rem 0 0.5rem 0; font-size: 1rem; color: #555;">Massachusetts Institute of Technology</p>
+                                    <p style="margin: 0; font-size: 0.9rem; color: #666; font-style: italic;">Dissertation: "Deep Learning Approaches for Natural Language Understanding"</p>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                        <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #2c3e50;">M.S. in Computer Science</h3>
+                                        <span style="font-size: 0.95rem; color: #666; font-style: italic;">2010</span>
+                                    </div>
+                                    <p style="margin: 0.3rem 0; font-size: 1rem; color: #555;">Stanford University</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Academic Positions -->
+                            <div style="margin-bottom: 2.5rem;">
+                                <h2 style="margin: 0 0 1.5rem 0; font-size: 1.3rem; font-weight: 700; color: #2c3e50; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #3498db; padding-bottom: 0.5rem;">Academic Positions</h2>
+                                <div style="margin-bottom: 2rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.3rem;">
+                                        <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #2c3e50;">Associate Professor</h3>
+                                        <span style="font-size: 0.9rem; color: #666; font-style: italic;">2020 — Present</span>
+                                    </div>
+                                    <p style="margin: 0 0 0.8rem 0; font-size: 1rem; color: #555;">University of Excellence, Department of Computer Science</p>
+                                    <ul style="margin: 0; padding-left: 1.5rem; color: #333; line-height: 1.8; font-size: 0.95rem;">
+                                        <li>Teaching graduate and undergraduate courses in AI and Machine Learning</li>
+                                        <li>Leading research lab with 8 Ph.D. students and 4 postdoctoral researchers</li>
+                                        <li>Published 25+ peer-reviewed papers in top-tier conferences (NeurIPS, ICML, ACL)</li>
+                                        <li>Secured $2M in research funding from NSF and industry partners</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.3rem;">
+                                        <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #2c3e50;">Assistant Professor</h3>
+                                        <span style="font-size: 0.9rem; color: #666; font-style: italic;">2015 — 2020</span>
+                                    </div>
+                                    <p style="margin: 0 0 0.8rem 0; font-size: 1rem; color: #555;">University of Excellence, Department of Computer Science</p>
+                                    <ul style="margin: 0; padding-left: 1.5rem; color: #333; line-height: 1.8; font-size: 0.95rem;">
+                                        <li>Established research lab focused on NLP and machine learning</li>
+                                        <li>Published 15 papers in premier AI conferences and journals</li>
+                                        <li>Received Early Career Award from ACM (2018)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Selected Publications -->
+                            <div style="margin-bottom: 2.5rem;">
+                                <h2 style="margin: 0 0 1rem 0; font-size: 1.3rem; font-weight: 700; color: #2c3e50; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #3498db; padding-bottom: 0.5rem;">Selected Publications</h2>
+                                <div style="padding-left: 1.5rem;">
+                                    <p style="margin: 0 0 1rem 0; color: #333; line-height: 1.6; font-size: 0.95rem; text-align: justify;">
+                                        <strong>Doe, J.</strong>, Smith, A., & Johnson, B. (2023). "Advanced Neural Architectures for Language Understanding." <em>Neural Information Processing Systems (NeurIPS)</em>. <span style="color: #3498db;">[Cited: 250+]</span>
+                                    </p>
+                                    <p style="margin: 0 0 1rem 0; color: #333; line-height: 1.6; font-size: 0.95rem; text-align: justify;">
+                                        <strong>Doe, J.</strong> & Williams, C. (2022). "Interpretable Machine Learning for Healthcare Applications." <em>International Conference on Machine Learning (ICML)</em>. <span style="color: #3498db;">[Cited: 180+]</span>
+                                    </p>
+                                    <p style="margin: 0; color: #333; line-height: 1.6; font-size: 0.95rem; text-align: justify;">
+                                        <strong>Doe, J.</strong>, et al. (2021). "Efficient Transfer Learning for Low-Resource Languages." <em>Association for Computational Linguistics (ACL)</em>. <span style="color: #3498db;">[Cited: 320+]</span>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- Honors & Awards -->
+                            <div>
+                                <h2 style="margin: 0 0 1rem 0; font-size: 1.3rem; font-weight: 700; color: #2c3e50; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #3498db; padding-bottom: 0.5rem;">Honors & Awards</h2>
+                                <ul style="margin: 0; padding-left: 1.5rem; color: #333; line-height: 1.8; font-size: 0.95rem;">
+                                    <li><strong>NSF CAREER Award</strong> (2022) — National Science Foundation</li>
+                                    <li><strong>Best Paper Award</strong> (2021) — ACL Conference</li>
+                                    <li><strong>Early Career Award</strong> (2018) — ACM SIGAI</li>
+                                    <li><strong>Outstanding Teaching Award</strong> (2019, 2022) — University of Excellence</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                },
+                'healthcare': () => {
+                    previewContent.innerHTML = `
+                        <div style="font-family: 'Arial', 'Helvetica', sans-serif; max-width: 800px; margin: 0 auto; background: white; box-shadow: 0 0 30px rgba(0,0,0,0.1);">
+                            <!-- Healthcare Header with Medical Cross -->
+                            <div style="background: linear-gradient(135deg, #006d77 0%, #00a8b5 100%); color: white; padding: 3rem 2.5rem; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: 20px; right: 20px; width: 80px; height: 80px; opacity: 0.2;">
+                                    <div style="position: absolute; width: 20px; height: 80px; background: white; left: 30px;"></div>
+                                    <div style="position: absolute; width: 80px; height: 20px; background: white; top: 30px;"></div>
+                                </div>
+                                <div style="position: relative; z-index: 2;">
+                                    <h1 style="margin: 0; font-size: 2.8rem; font-weight: 700; letter-spacing: 1px;">Dr. Sarah Johnson, MD</h1>
+                                    <p style="margin: 1rem 0 0.5rem 0; font-size: 1.3rem; font-weight: 600; opacity: 0.95;">Board Certified Internal Medicine Physician</p>
+                                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.3); display: flex; gap: 2rem; flex-wrap: wrap; font-size: 0.95rem;">
+                                        <span>📧 dr.johnson@healthcare.com</span>
+                                        <span>📱 +1 (555) 123-4567</span>
+                                        <span>📍 Chicago, IL</span>
+                                        <span>🏥 License #MD123456</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Content -->
+                            <div style="padding: 3rem 2.5rem;">
+                                <!-- Professional Summary -->
+                                <div style="margin-bottom: 3rem; padding: 2rem; background: #f0f9fa; border-left: 5px solid #006d77; border-radius: 0 8px 8px 0;">
+                                    <h2 style="margin: 0 0 1rem 0; font-size: 1.4rem; font-weight: 700; color: #006d77;">Professional Summary</h2>
+                                    <p style="margin: 0; line-height: 1.8; color: #333; font-size: 1.05rem; text-align: justify;">
+                                        Compassionate and dedicated Internal Medicine physician with 10+ years of clinical experience. Proven expertise in patient care, diagnosis, and treatment of complex medical conditions. Strong commitment to evidence-based medicine and patient-centered care. Board certified with excellent track record in improving patient outcomes and satisfaction.
+                                    </p>
+                                </div>
+                                
+                                <!-- Medical Education & Training -->
+                                <div style="margin-bottom: 3rem;">
+                                    <h2 style="margin: 0 0 1.5rem 0; font-size: 1.4rem; font-weight: 700; color: #006d77; border-bottom: 3px solid #00a8b5; padding-bottom: 0.5rem;">Medical Education & Training</h2>
+                                    <div style="margin-bottom: 2rem;">
+                                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+                                            <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #333;">Doctor of Medicine (MD)</h3>
+                                            <span style="font-size: 0.95rem; color: #666; font-weight: 600;">2014</span>
+                                        </div>
+                                        <p style="margin: 0.3rem 0 0.5rem 0; font-size: 1.05rem; color: #006d77; font-weight: 600;">Johns Hopkins School of Medicine, Baltimore, MD</p>
+                                        <p style="margin: 0; font-size: 0.95rem; color: #666;">• Honors in Internal Medicine • Research Fellow</p>
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+                                            <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #333;">Residency — Internal Medicine</h3>
+                                            <span style="font-size: 0.95rem; color: #666; font-weight: 600;">2014 — 2017</span>
+                                        </div>
+                                        <p style="margin: 0.3rem 0; font-size: 1.05rem; color: #006d77; font-weight: 600;">Massachusetts General Hospital, Boston, MA</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Board Certifications -->
+                                <div style="margin-bottom: 3rem;">
+                                    <h2 style="margin: 0 0 1rem 0; font-size: 1.4rem; font-weight: 700; color: #006d77; border-bottom: 3px solid #00a8b5; padding-bottom: 0.5rem;">Board Certifications & Licenses</h2>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                        <div style="padding: 1.2rem; background: #f0f9fa; border-left: 4px solid #00a8b5; border-radius: 0 8px 8px 0;">
+                                            <h4 style="margin: 0 0 0.3rem 0; font-size: 1rem; font-weight: 700; color: #006d77;">Board Certified</h4>
+                                            <p style="margin: 0; font-size: 0.95rem; color: #333;">American Board of Internal Medicine</p>
+                                        </div>
+                                        <div style="padding: 1.2rem; background: #f0f9fa; border-left: 4px solid #00a8b5; border-radius: 0 8px 8px 0;">
+                                            <h4 style="margin: 0 0 0.3rem 0; font-size: 1rem; font-weight: 700; color: #006d77;">Medical License</h4>
+                                            <p style="margin: 0; font-size: 0.95rem; color: #333;">Illinois State Medical Board</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Professional Experience -->
+                                <div style="margin-bottom: 3rem;">
+                                    <h2 style="margin: 0 0 1.5rem 0; font-size: 1.4rem; font-weight: 700; color: #006d77; border-bottom: 3px solid #00a8b5; padding-bottom: 0.5rem;">Professional Experience</h2>
+                                    
+                                    <div style="margin-bottom: 2.5rem; padding: 1.5rem; background: #fafafa; border-left: 4px solid #006d77; border-radius: 0 8px 8px 0;">
+                                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+                                            <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #333;">Attending Physician — Internal Medicine</h3>
+                                            <span style="font-size: 0.9rem; color: #666; font-weight: 600;">2017 — Present</span>
+                                        </div>
+                                        <p style="margin: 0.5rem 0 1rem 0; font-size: 1.05rem; color: #006d77; font-weight: 600;">Northwestern Memorial Hospital, Chicago, IL</p>
+                                        <ul style="margin: 0; padding-left: 1.5rem; color: #333; line-height: 1.9; font-size: 0.98rem;">
+                                            <li>Provide comprehensive primary and acute care for diverse patient population of 2000+ patients</li>
+                                            <li>Diagnose and manage complex medical conditions including diabetes, hypertension, and heart disease</li>
+                                            <li>Collaborate with multidisciplinary teams to ensure optimal patient outcomes</li>
+                                            <li>Supervise and mentor medical residents and students in clinical settings</li>
+                                            <li>Maintain 98% patient satisfaction rating and consistently receive excellent patient reviews</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div style="padding: 1.5rem; background: #fafafa; border-left: 4px solid #006d77; border-radius: 0 8px 8px 0;">
+                                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+                                            <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #333;">Chief Resident — Internal Medicine</h3>
+                                            <span style="font-size: 0.9rem; color: #666; font-weight: 600;">2016 — 2017</span>
+                                        </div>
+                                        <p style="margin: 0.5rem 0 1rem 0; font-size: 1.05rem; color: #006d77; font-weight: 600;">Massachusetts General Hospital, Boston, MA</p>
+                                        <ul style="margin: 0; padding-left: 1.5rem; color: #333; line-height: 1.9; font-size: 0.98rem;">
+                                            <li>Led team of 40 residents in clinical education and quality improvement initiatives</li>
+                                            <li>Coordinated resident schedules and ensured optimal patient care coverage</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <!-- Clinical Expertise -->
+                                <div>
+                                    <h2 style="margin: 0 0 1rem 0; font-size: 1.4rem; font-weight: 700; color: #006d77; border-bottom: 3px solid #00a8b5; padding-bottom: 0.5rem;">Clinical Expertise</h2>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; font-size: 0.95rem; color: #333;">
+                                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                            <span style="color: #00a8b5; font-size: 1.2rem;">✓</span>
+                                            <span>Chronic Disease Management</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                            <span style="color: #00a8b5; font-size: 1.2rem;">✓</span>
+                                            <span>Preventive Medicine</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                            <span style="color: #00a8b5; font-size: 1.2rem;">✓</span>
+                                            <span>Cardiovascular Care</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                            <span style="color: #00a8b5; font-size: 1.2rem;">✓</span>
+                                            <span>Geriatric Medicine</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                            <span style="color: #00a8b5; font-size: 1.2rem;">✓</span>
+                                            <span>Diabetes Management</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                            <span style="color: #00a8b5; font-size: 1.2rem;">✓</span>
+                                            <span>Patient Education & Counseling</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                },
+                'sales': () => {
+                    previewContent.innerHTML = `
+                        <div style="font-family: 'Arial', 'Helvetica', sans-serif; max-width: 800px; margin: 0 auto; background: white; box-shadow: 0 0 40px rgba(0,0,0,0.15);">
+                            <!-- Dynamic Sales Header -->
+                            <div style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 50%, #e67e22 100%); color: white; padding: 3rem 2.5rem; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: -30px; right: -30px; width: 150px; height: 150px; border: 20px solid rgba(255,255,255,0.1); border-radius: 50%; transform: rotate(45deg);"></div>
+                                <div style="position: absolute; bottom: -50px; left: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+                                <div style="position: relative; z-index: 2;">
+                                    <div style="display: inline-block; padding: 0.5rem 1.5rem; background: rgba(255,255,255,0.2); border-radius: 25px; font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem;">TOP PERFORMER 🏆</div>
+                                    <h1 style="margin: 0; font-size: 2.8rem; font-weight: 700; letter-spacing: 1px;">Michael Anderson</h1>
+                                    <p style="margin: 1rem 0; font-size: 1.4rem; font-weight: 600;">Senior Sales Executive | Revenue Growth Specialist</p>
+                                    <div style="margin-top: 1.8rem; display: flex; gap: 2rem; flex-wrap: wrap; font-size: 0.95rem;">
+                                        <span>📧 michael.anderson@sales.com</span>
+                                        <span>📱 +1 (555) 123-4567</span>
+                                        <span>📍 New York, NY</span>
+                                        <span>💼 LinkedIn: /in/manderson</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Performance Metrics Banner -->
+                            <div style="background: #34495e; color: white; padding: 2rem 2.5rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; text-align: center;">
+                                <div>
+                                    <div style="font-size: 2rem; font-weight: 700; color: #f39c12;">$15M+</div>
+                                    <div style="font-size: 0.9rem; margin-top: 0.3rem; opacity: 0.9;">Total Revenue Generated</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 2rem; font-weight: 700; color: #2ecc71;">250%</div>
+                                    <div style="font-size: 0.9rem; margin-top: 0.3rem; opacity: 0.9;">Quota Achievement</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 2rem; font-weight: 700; color: #3498db;">500+</div>
+                                    <div style="font-size: 0.9rem; margin-top: 0.3rem; opacity: 0.9;">Clients Closed</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 2rem; font-weight: 700; color: #e74c3c;">#1</div>
+                                    <div style="font-size: 0.9rem; margin-top: 0.3rem; opacity: 0.9;">Top Performer 5 Years</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Content -->
+                            <div style="padding: 3rem 2.5rem;">
+                                <!-- Professional Summary -->
+                                <div style="margin-bottom: 3rem; padding: 2rem; background: linear-gradient(135deg, rgba(231, 76, 60, 0.05), rgba(230, 126, 34, 0.05)); border-left: 5px solid #e74c3c; border-radius: 0 8px 8px 0;">
+                                    <h2 style="margin: 0 0 1rem 0; font-size: 1.4rem; font-weight: 700; color: #e74c3c;">Professional Summary</h2>
+                                    <p style="margin: 0; line-height: 1.8; color: #333; font-size: 1.05rem; text-align: justify;">
+                                        Results-driven sales executive with 12+ years of proven success in B2B enterprise software sales. Consistent top performer with track record of exceeding quotas by 150-250%. Expert in consultative selling, relationship building, and closing complex multi-million dollar deals. Known for transforming prospects into loyal long-term clients and driving sustainable revenue growth.
+                                    </p>
+                                </div>
+                                
+                                <!-- Core Competencies -->
+                                <div style="margin-bottom: 3rem;">
+                                    <h2 style="margin: 0 0 1.5rem 0; font-size: 1.4rem; font-weight: 700; color: #e74c3c; border-bottom: 3px solid #e74c3c; padding-bottom: 0.5rem;">Core Competencies</h2>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                                        <div style="padding: 1rem; background: #fff5f5; border-left: 3px solid #e74c3c; font-size: 0.95rem; color: #333; font-weight: 600;">Enterprise Sales</div>
+                                        <div style="padding: 1rem; background: #fff5f5; border-left: 3px solid #e74c3c; font-size: 0.95rem; color: #333; font-weight: 600;">Account Management</div>
+                                        <div style="padding: 1rem; background: #fff5f5; border-left: 3px solid #e74c3c; font-size: 0.95rem; color: #333; font-weight: 600;">Negotiation</div>
+                                        <div style="padding: 1rem; background: #fff5f5; border-left: 3px solid #e74c3c; font-size: 0.95rem; color: #333; font-weight: 600;">Pipeline Management</div>
+                                        <div style="padding: 1rem; background: #fff5f5; border-left: 3px solid #e74c3c; font-size: 0.95rem; color: #333; font-weight: 600;">Consultative Selling</div>
+                                        <div style="padding: 1rem; background: #fff5f5; border-left: 3px solid #e74c3c; font-size: 0.95rem; color: #333; font-weight: 600;">C-Level Relations</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Professional Experience -->
+                                <div style="margin-bottom: 3rem;">
+                                    <h2 style="margin: 0 0 1.5rem 0; font-size: 1.4rem; font-weight: 700; color: #e74c3c; border-bottom: 3px solid #e74c3c; padding-bottom: 0.5rem;">Professional Experience</h2>
+                                    
+                                    <div style="margin-bottom: 2.5rem; padding: 2rem; background: #fafafa; border-left: 5px solid #e74c3c; border-radius: 0 12px 12px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.8rem;">
+                                            <h3 style="margin: 0; font-size: 1.3rem; font-weight: 700; color: #2c3e50;">Senior Sales Executive</h3>
+                                            <span style="padding: 0.3rem 1rem; background: #e74c3c; color: white; border-radius: 15px; font-size: 0.85rem; font-weight: 600;">2019 — Present</span>
+                                        </div>
+                                        <p style="margin: 0.5rem 0 1.2rem 0; font-size: 1.1rem; color: #e74c3c; font-weight: 700;">TechSolutions Inc. | New York, NY</p>
+                                        <ul style="margin: 0; padding-left: 1.5rem; color: #333; line-height: 2; font-size: 1rem;">
+                                            <li><strong>Generated $8M+ in annual revenue</strong> by closing 50+ enterprise deals with Fortune 500 companies</li>
+                                            <li><strong>Exceeded quota by 250%</strong> for 4 consecutive years, ranking #1 nationally</li>
+                                            <li><strong>Built and managed strategic accounts</strong> worth $500K-$2M each, achieving 95% retention</li>
+                                            <li><strong>Shortened sales cycle by 30%</strong> through consultative approach and value-based selling</li>
+                                            <li><strong>Mentored 10+ junior sales reps</strong>, 8 of whom became top performers within their first year</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div style="padding: 2rem; background: #fafafa; border-left: 5px solid #e67e22; border-radius: 0 12px 12px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.8rem;">
+                                            <h3 style="margin: 0; font-size: 1.3rem; font-weight: 700; color: #2c3e50;">Sales Account Executive</h3>
+                                            <span style="padding: 0.3rem 1rem; background: #e67e22; color: white; border-radius: 15px; font-size: 0.85rem; font-weight: 600;">2015 — 2019</span>
+                                        </div>
+                                        <p style="margin: 0.5rem 0 1.2rem 0; font-size: 1.1rem; color: #e67e22; font-weight: 700;">Cloud Systems Corp. | Boston, MA</p>
+                                        <ul style="margin: 0; padding-left: 1.5rem; color: #333; line-height: 2; font-size: 1rem;">
+                                            <li><strong>Achieved 180% of quota</strong> by closing $3M+ in new business annually</li>
+                                            <li><strong>Expanded territory from 20 to 75 accounts</strong> through strategic prospecting</li>
+                                            <li><strong>Won "Rising Star Award"</strong> for outstanding performance in 2017</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <!-- Education & Achievements -->
+                                <div>
+                                    <h2 style="margin: 0 0 1.5rem 0; font-size: 1.4rem; font-weight: 700; color: #e74c3c; border-bottom: 3px solid #e74c3c; padding-bottom: 0.5rem;">Education & Achievements</h2>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                        <div style="padding: 1.5rem; background: #fff5f5; border-radius: 10px; border: 2px solid #e74c3c;">
+                                            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem; font-weight: 700; color: #2c3e50;">Bachelor of Business Administration</h3>
+                                            <p style="margin: 0; font-size: 0.95rem; color: #666;">New York University | 2012</p>
+                                        </div>
+                                        <div style="padding: 1.5rem; background: #fff5f5; border-radius: 10px; border: 2px solid #e74c3c;">
+                                            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem; font-weight: 700; color: #2c3e50;">Sales Professional Certifications</h3>
+                                            <p style="margin: 0; font-size: 0.95rem; color: #666;">Sandler Sales • SPIN Selling • Challenger Sale</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                },
+                'corporate': () => {
+                    previewContent.innerHTML = `
+                        <div style="font-family: 'Georgia', 'Times New Roman', serif; max-width: 750px; margin: 0 auto; background: white; padding: 0; box-shadow: 0 0 40px rgba(0,0,0,0.1);">
+                            <!-- Elegant Header with Navy Blue -->
+                            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 3rem 3rem 2.5rem 3rem; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: 0; right: 0; width: 200px; height: 200px; background: rgba(255,255,255,0.03); border-radius: 50%; transform: translate(50px, -50px);"></div>
+                                <div style="position: relative; z-index: 2;">
+                                    <h1 style="margin: 0; font-size: 2.8rem; font-weight: 700; color: #ffffff; letter-spacing: 2px; text-transform: uppercase; border-bottom: 3px solid #d4af37; padding-bottom: 1rem; display: inline-block;">John Doe</h1>
+                                    <p style="margin: 1.5rem 0 0 0; font-size: 1.3rem; color: #d4af37; font-weight: 600; letter-spacing: 1px;">Chief Executive Officer</p>
+                                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.2); display: flex; gap: 2.5rem; flex-wrap: wrap; font-size: 0.95rem; color: rgba(255,255,255,0.9);">
+                                        <span>📧 john.doe@corporate.com</span>
+                                        <span>📱 +1 (555) 123-4567</span>
+                                        <span>📍 New York, NY</span>
+                                        <span>🔗 linkedin.com/in/johndoe</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Content Section -->
+                            <div style="padding: 3rem;">
+                                <!-- Executive Summary with elegant border -->
+                                <div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e5e5;">
+                                    <h2 style="margin: 0 0 1.5rem 0; font-size: 1.4rem; font-weight: 700; color: #1a1a2e; text-transform: uppercase; letter-spacing: 2px; position: relative; padding-bottom: 0.5rem;">
+                                        Executive Summary
+                                        <div style="position: absolute; bottom: 0; left: 0; width: 80px; height: 3px; background: #d4af37;"></div>
+                                    </h2>
+                                    <p style="margin: 0; line-height: 1.9; color: #333; font-size: 1.05rem; text-align: justify;">
+                                        Distinguished executive with 15+ years of progressive leadership experience in Fortune 500 companies. Proven track record of driving organizational transformation, strategic planning, and delivering exceptional results. Expert in P&L management, mergers & acquisitions, and building high-performance teams.
+                                    </p>
+                                </div>
+                                
+                                <!-- Core Competencies in elegant box -->
+                                <div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e5e5;">
+                                    <h2 style="margin: 0 0 1.5rem 0; font-size: 1.4rem; font-weight: 700; color: #1a1a2e; text-transform: uppercase; letter-spacing: 2px; position: relative; padding-bottom: 0.5rem;">
+                                        Core Competencies
+                                        <div style="position: absolute; bottom: 0; left: 0; width: 80px; height: 3px; background: #d4af37;"></div>
+                                    </h2>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem 2rem; color: #333; font-size: 0.95rem;">
+                                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                            <span style="color: #d4af37; font-size: 0.8rem;">▪</span>
+                                            <span>Strategic Leadership & Vision</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                            <span style="color: #d4af37; font-size: 0.8rem;">▪</span>
+                                            <span>P&L Management ($500M+)</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                            <span style="color: #d4af37; font-size: 0.8rem;">▪</span>
+                                            <span>Mergers & Acquisitions</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                            <span style="color: #d4af37; font-size: 0.8rem;">▪</span>
+                                            <span>Digital Transformation</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                            <span style="color: #d4af37; font-size: 0.8rem;">▪</span>
+                                            <span>Board Relations</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                            <span style="color: #d4af37; font-size: 0.8rem;">▪</span>
+                                            <span>Global Operations</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Professional Experience -->
+                                <div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e5e5;">
+                                    <h2 style="margin: 0 0 2rem 0; font-size: 1.4rem; font-weight: 700; color: #1a1a2e; text-transform: uppercase; letter-spacing: 2px; position: relative; padding-bottom: 0.5rem;">
+                                        Professional Experience
+                                        <div style="position: absolute; bottom: 0; left: 0; width: 80px; height: 3px; background: #d4af37;"></div>
+                                    </h2>
+                                    
+                                    <div style="margin-bottom: 3rem;">
+                                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+                                            <h3 style="margin: 0; font-size: 1.3rem; font-weight: 700; color: #1a1a2e;">Chief Executive Officer</h3>
+                                            <span style="font-size: 0.95rem; color: #666; font-weight: 600; font-style: italic;">2020 — Present</span>
+                                        </div>
+                                        <p style="margin: 0.5rem 0 1.2rem 0; font-size: 1.05rem; color: #d4af37; font-weight: 600;">Global Tech Solutions Inc. | New York, NY</p>
+                                        <ul style="margin: 0; padding-left: 1.8rem; color: #333; line-height: 2; font-size: 0.98rem;">
+                                            <li>Orchestrated company-wide digital transformation resulting in 300% revenue growth to $500M</li>
+                                            <li>Led strategic acquisitions worth $150M, expanding market presence across 12 countries</li>
+                                            <li>Built and mentored C-suite leadership team of 8 executives</li>
+                                            <li>Achieved 98% customer retention rate through excellence in service delivery</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+                                            <h3 style="margin: 0; font-size: 1.3rem; font-weight: 700; color: #1a1a2e;">Chief Operating Officer</h3>
+                                            <span style="font-size: 0.95rem; color: #666; font-weight: 600; font-style: italic;">2015 — 2020</span>
+                                        </div>
+                                        <p style="margin: 0.5rem 0 1.2rem 0; font-size: 1.05rem; color: #d4af37; font-weight: 600;">Enterprise Solutions Corp. | Boston, MA</p>
+                                        <ul style="margin: 0; padding-left: 1.8rem; color: #333; line-height: 2; font-size: 0.98rem;">
+                                            <li>Managed operations for $300M business unit with 500+ employees</li>
+                                            <li>Implemented operational excellence programs resulting in 40% efficiency gains</li>
+                                            <li>Spearheaded international expansion into Asian and European markets</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <!-- Education & Professional Development -->
+                                <div>
+                                    <h2 style="margin: 0 0 1.5rem 0; font-size: 1.4rem; font-weight: 700; color: #1a1a2e; text-transform: uppercase; letter-spacing: 2px; position: relative; padding-bottom: 0.5rem;">
+                                        Education & Professional Development
+                                        <div style="position: absolute; bottom: 0; left: 0; width: 80px; height: 3px; background: #d4af37;"></div>
+                                    </h2>
+                                    
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                                        <div style="padding: 1.5rem; background: #fafafa; border-left: 4px solid #d4af37; border-radius: 0 8px 8px 0;">
+                                            <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #1a1a2e;">MBA, Strategic Management</h3>
+                                            <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.95rem; font-style: italic;">Harvard Business School</p>
+                                            <p style="margin: 0.3rem 0 0 0; color: #666; font-size: 0.9rem;">2005</p>
+                                        </div>
+                                        <div style="padding: 1.5rem; background: #fafafa; border-left: 4px solid #d4af37; border-radius: 0 8px 8px 0;">
+                                            <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #1a1a2e;">BS, Computer Science</h3>
+                                            <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.95rem; font-style: italic;">Massachusetts Institute of Technology</p>
+                                            <p style="margin: 0.3rem 0 0 0; color: #666; font-size: 0.9rem;">2003</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="margin-top: 1.5rem; padding: 1.2rem; background: #fafafa; border-radius: 8px; border: 1px solid #e5e5e5;">
+                                        <h4 style="margin: 0 0 0.8rem 0; font-size: 1rem; font-weight: 600; color: #1a1a2e;">Executive Certifications:</h4>
+                                        <div style="color: #333; font-size: 0.95rem; line-height: 1.8;">
+                                            Advanced Management Program (Harvard) • Executive Leadership (Stanford) • Board Governance Certificate
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            };
+            
+            templates[template]();
+        }
+        
+        // Initialize with default template
+        updatePreviewTemplate('executive');
+        
+        function getTemplateFont(template) {
+            const fonts = {
+                'executive': '"Times New Roman", serif',
+                'professional': '"Arial", sans-serif',
+                'modern': '"Helvetica Neue", sans-serif',
+                'minimal': '"Georgia", serif'
+            };
+            return fonts[template] || fonts['executive'];
+        }
+        
+        function getHeaderPadding(template) {
+            const paddings = {
+                'executive': '2rem',
+                'professional': '1.5rem',
+                'modern': '2.5rem 2rem',
+                'minimal': '1rem 0'
+            };
+            return paddings[template];
+        }
+        
+        function getHeaderRadius(template) {
+            const radius = {
+                'executive': '12px',
+                'professional': '8px',
+                'modern': '0px',
+                'minimal': '0px'
+            };
+            return radius[template];
+        }
+        
+        function getNameSize(template) {
+            const sizes = {
+                'executive': '2.2rem',
+                'professional': '1.8rem',
+                'modern': '2.5rem',
+                'minimal': '2rem'
+            };
+            return sizes[template];
+        }
+        
+        function getNameWeight(template) {
+            const weights = {
+                'executive': '700',
+                'professional': '600',
+                'modern': '300',
+                'minimal': '400'
+            };
+            return weights[template];
+        }
+        
+        function getNameTransform(template) {
+            const transforms = {
+                'executive': 'uppercase',
+                'professional': 'none',
+                'modern': 'none',
+                'minimal': 'none'
+            };
+            return transforms[template];
+        }
+        
+        function getSectionTitleSize(template) {
+            const sizes = {
+                'executive': '1.1rem',
+                'professional': '1rem',
+                'modern': '1.2rem',
+                'minimal': '0.9rem'
+            };
+            return sizes[template];
+        }
+        
+        function getSectionTitleWeight(template) {
+            const weights = {
+                'executive': '800',
+                'professional': '700',
+                'modern': '600',
+                'minimal': '500'
+            };
+            return weights[template];
+        }
+        
+        function getSectionLetterSpacing(template) {
+            const spacing = {
+                'executive': '2px',
+                'professional': '1px',
+                'modern': '0px',
+                'minimal': '1px'
+            };
+            return spacing[template];
+        }
+        
+        function getSectionMargin(template) {
+            const margins = {
+                'executive': '1rem',
+                'professional': '0.8rem',
+                'modern': '1.2rem',
+                'minimal': '0.5rem'
+            };
+            return margins[template];
+        }
+        
+        function getSectionSpacing(template) {
+            const spacing = {
+                'executive': '2rem',
+                'professional': '1.5rem',
+                'modern': '2.5rem',
+                'minimal': '1.2rem'
+            };
+            return spacing[template];
+        }
+    </script>
+</body>
+</html>
